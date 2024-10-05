@@ -1,15 +1,24 @@
--- Insertar roles
+-- Limpiar tablas previas (esto es opcional y debe ser lo primero si es necesario)
+DELETE FROM user_roles;
+DELETE FROM users;
+DELETE FROM roles;
 
-INSERT INTO roles (id_role, name) VALUES (default, 'ROLE_USER');
-INSERT INTO roles (id_role, name) VALUES (default, 'ROLE_ADMIN');
-;
+-- Añadir la columna 'username' si no existe
+ALTER TABLE users ADD COLUMN IF NOT EXISTS username VARCHAR(255);
+
+-- Insertar roles
+INSERT INTO roles (id_role, name) VALUES (1, 'ROLE_USER');
+INSERT INTO roles (id_role, name) VALUES (2, 'ROLE_ADMIN');
 
 -- Insertar usuarios
-INSERT INTO users (id_user, email, PASSWORD) VALUES
-(1, 'manoli@example.com', '$2a$12$94zEKKFf.nTMYJcaHUADoOsQpyDo/.6T.JHMmUb7P35PAOPNC6ZjK');
+INSERT INTO users (id_user, email, password, username) 
+VALUES (1, 'manolo@example.com', '$2a$12$DowJonesIndexGVKDw/w9bLVpHgXUtbjeqEhMUq3nCFV.bKuUCpqKi', 'manolo');
+INSERT INTO users (id_user, email, password, username) 
+VALUES (2, 'manoli@example.com', '$2a$12$tjBqHbRqNTq2deiHD9ydSuJ3NXWYHQIb4q2JvqjESKZeAI5NQ00oS', 'manoli');
 
--- Asignar roles a usuarios (usando la tabla USER_ROLES)
-INSERT INTO USER_ROLES (ROLE_ID, USER_ID) VALUES (2, 1);
+-- Asignar roles a los usuarios
+INSERT INTO user_roles (role_id, user_id) VALUES (1, 1);  -- Asigna el rol "USER" (ROLE_ID = 1) al primer usuario
+INSERT INTO user_roles (role_id, user_id) VALUES (2, 2); 
 
 -- Insertar categorías (usando la tabla CATEGORIA)
 INSERT INTO CATEGORIA (ID, NOMBRE) VALUES
