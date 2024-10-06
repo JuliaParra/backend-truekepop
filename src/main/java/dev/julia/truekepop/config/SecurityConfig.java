@@ -6,20 +6,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import dev.julia.truekepop.facades.encryptations.Base64Encoder;
 import dev.julia.truekepop.services.JpaUserDetailsService;
-
 
 @Configuration
 @EnableWebSecurity
@@ -40,33 +40,36 @@ public class SecurityConfig {
 
     }
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http
-                .cors(cors -> cors.configurationSource(corsConfiguration()))
-                .csrf(csrf -> csrf.disable())
-                .formLogin(form -> form.disable())
+            .cors(cors -> cors.configurationSource(corsConfiguration()))
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.POST, endpoint + "/login").permitAll() // Permitir acceso al login
+                .requestMatchers(HttpMethod.GET, endpoint + "/trueke").permitAll()
+                .requestMatchers(HttpMethod.POST, endpoint + "/trueke").permitAll() // Permitir acceso a truekes
+                .requestMatchers(HttpMethod.GET, endpoint + "/admin/**").hasRole("ADMIN") // Solo ADMIN para /admin/**
+                .anyRequest().permitAll() 
+            )
+            .userDetailsService(jpaUserDetailsService)
+            .httpBasic(basic -> basic.authenticationEntryPoint(myBasicAuthenticationEntryPoint))
+            .sessionManagement(session -> session
+                    .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-            .requestMatchers(HttpMethod.GET, endpoint + "/search/**").permitAll()
-            .requestMatchers(HttpMethod.POST, endpoint + "/login").permitAll()
-            .requestMatchers(HttpMethod.GET, endpoint + "/user").hasAnyRole("ADMIN")
-            .requestMatchers(HttpMethod.DELETE, endpoint + "/trueke").hasAnyRole("ADMIN")
-            .requestMatchers(HttpMethod.POST, endpoint + "/user").hasAnyRole("USER")
+    http.headers(header -> header.frameOptions(frame -> frame.sameOrigin()));
 
-            .anyRequest().authenticated())
-
-                .userDetailsService(jpaUserDetailsService)
-                .httpBasic(basic -> basic.authenticationEntryPoint(myBasicAuthenticationEntryPoint))
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
-
-        http.headers(header -> header.frameOptions(frame -> frame.sameOrigin()));
-
-        return http.build();
+    return http.build();
     }
+
+@Bean
+public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+    AuthenticationManagerBuilder authenticationManagerBuilder =
+            http.getSharedObject(AuthenticationManagerBuilder.class);
+    authenticationManagerBuilder.userDetailsService(jpaUserDetailsService).passwordEncoder(passwordEncoder());
+    return authenticationManagerBuilder.build();
+}
 
     @Bean
     CorsConfigurationSource corsConfiguration() {
@@ -80,7 +83,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 
     @Bean
     PasswordEncoder passwordEncoder() {

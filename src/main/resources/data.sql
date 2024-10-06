@@ -12,7 +12,7 @@ INSERT INTO roles (id_role, name) VALUES (2, 'ROLE_ADMIN');
 
 -- Insertar usuarios
 INSERT INTO users (id_user, email, password, username) 
-VALUES (1, 'manolo@example.com', '$2a$12$DowJonesIndexGVKDw/w9bLVpHgXUtbjeqEhMUq3nCFV.bKuUCpqKi', 'manolo');
+VALUES (1,  'user@example.com', '$2a$10$EIXZHy2uM.LlBGQKQy2mLuvB9aT6qUJn6xDuv3X0rQ8IHTG9LqF4a', 'user123');
 INSERT INTO users (id_user, email, password, username) 
 VALUES (2, 'manoli@example.com', '$2a$12$tjBqHbRqNTq2deiHD9ydSuJ3NXWYHQIb4q2JvqjESKZeAI5NQ00oS', 'manoli');
 
@@ -30,7 +30,7 @@ INSERT INTO CATEGORIA (ID, NOMBRE) VALUES
 
 -- Insertar truekes
 INSERT INTO TRUEKE (ID, NAME, DESCRIPTION, IMAGE, LOCATION, DESIRED_ITEM, TYPE, CATEGORIA_ID, LIKES) VALUES
-(1, 'Bicicleta Vintage', 'Cambio bicicleta vintage por monopatín en perfecto estado.', '/src/assets/images/caravana.jpg', 'Madrid, España', 'Monopatín de alta calidad', 'trueke', 1, 25),
+(1, 'Bicicleta Vintage', 'Cambio bicicleta vintage por monopatín en perfecto estado.', 'https://cdn.pixabay.com/photo/2021/11/17/15/26/gardening-6803876_1280.jpg', 'Madrid, España', 'Monopatín de alta calidad', 'trueke', 1, 25),
 (2, 'Cámara DSLR', 'Cambio cámara DSLR por equipo de fotografía profesional.', '/src/assets/images/caravana.jpg', 'Barcelona, España', 'Accesorios de Fotografía', 'oferta', 2, 40),
 (3, 'Smartphone Samsung', 'Vendo smartphone Samsung Galaxy en excelente estado.', '/src/assets/images/caravana.jpg', 'Valencia, España', 'Accesorios para Smartphone', 'oferta', 3, 30),
 (4, 'Patín Eléctrico', 'Patín eléctrico usado, perfecto para desplazamientos cortos.', '/src/assets/images/caravana.jpg', 'Sevilla, España', 'Bicicleta o Scooter', 'trueke', 4, 15);

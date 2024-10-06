@@ -1,7 +1,5 @@
 package dev.julia.truekepop.models;
 
-
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,10 +28,8 @@ public class Trueke {
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
-    
     public Trueke() {}
 
-    
     public Trueke(String name, String description, String image, String location, String desiredItem, String type, int likes, Categoria categoria) {
         this.name = name;
         this.description = description;
@@ -45,13 +41,8 @@ public class Trueke {
         this.categoria = categoria;
     }
 
-    
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -118,4 +109,3 @@ public class Trueke {
         this.categoria = categoria;
     }
 }
-
