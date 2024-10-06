@@ -23,23 +23,19 @@ import dev.julia.truekepop.services.JpaUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
-
 public class SecurityConfig {
 
     @Value("${api-endpoint}")
     String endpoint;
 
     MyBasicAuthenticationEntryPoint myBasicAuthenticationEntryPoint;
-
     JpaUserDetailsService jpaUserDetailsService;
 
     public SecurityConfig(JpaUserDetailsService jpaUserDetailsService,
-            MyBasicAuthenticationEntryPoint basicEntryPoint) {
+                          MyBasicAuthenticationEntryPoint basicEntryPoint) {
         this.jpaUserDetailsService = jpaUserDetailsService;
         this.myBasicAuthenticationEntryPoint = basicEntryPoint;
-
     }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -50,6 +46,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, endpoint + "/login").permitAll() // Permitir acceso al login
                 .requestMatchers(HttpMethod.GET, endpoint + "/trueke").permitAll()
                 .requestMatchers(HttpMethod.POST, endpoint + "/trueke").permitAll() // Permitir acceso a truekes
+                .requestMatchers(HttpMethod.POST, endpoint + "/messages").permitAll() // Permitir acceso al endpoint de mensajes
                 .requestMatchers(HttpMethod.GET, endpoint + "/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, endpoint + "/admin/**").hasRole("ADMIN") // Solo ADMIN para /admin/**
                 .anyRequest().permitAll() 
@@ -57,20 +54,20 @@ public class SecurityConfig {
             .userDetailsService(jpaUserDetailsService)
             .httpBasic(basic -> basic.authenticationEntryPoint(myBasicAuthenticationEntryPoint))
             .sessionManagement(session -> session
-                    .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
-    http.headers(header -> header.frameOptions(frame -> frame.sameOrigin()));
+        http.headers(header -> header.frameOptions(frame -> frame.sameOrigin()));
 
-    return http.build();
+        return http.build();
     }
 
-@Bean
-public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-    AuthenticationManagerBuilder authenticationManagerBuilder =
-            http.getSharedObject(AuthenticationManagerBuilder.class);
-    authenticationManagerBuilder.userDetailsService(jpaUserDetailsService).passwordEncoder(passwordEncoder());
-    return authenticationManagerBuilder.build();
-}
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(jpaUserDetailsService).passwordEncoder(passwordEncoder());
+        return authenticationManagerBuilder.build();
+    }
 
     @Bean
     CorsConfigurationSource corsConfiguration() {

@@ -32,7 +32,7 @@ INSERT INTO CATEGORIA (ID, NOMBRE) VALUES
 
 -- Insertar truekes
 INSERT INTO TRUEKE (ID, NAME, DESCRIPTION, IMAGE, LOCATION, DESIRED_ITEM, TYPE, CATEGORIA_ID, LIKES, OWNER_NAME) VALUES
-(1, 'Bicicleta Vintage', 'Cambio bicicleta vintage por monopatín en perfecto estado.', 'https://cdn.pixabay.com/photo/2012/12/23/00/07/bicycle-71925_1280.jpg', 'Madrid, España', 'Monopatín de alta calidad', 'trueke', 1, 25, 'Carlos Sánchez'),
+(1, 'Bicicleta Vintage', 'Cambio bicicleta vintage por monopatín en perfecto estado.', 'https://cdn.pixabay.com/photo/2012/12/23/00/07/bicycle-71925_1280.jpg', 'Madrid, España', 'Monopatín de alta calidad', 'trueke', 1, 25, 'Emma Garcia '),
 (2, 'Cámara DSLR', 'Cambio cámara DSLR por equipo de fotografía profesional.', 'https://cdn.pixabay.com/photo/2016/09/30/12/02/camera-1705135_1280.jpg', 'Barcelona, España', 'Accesorios de Fotografía', 'oferta', 2, 40, 'Ana García'),
 (3, 'Smartphone Samsung', 'Vendo smartphone Samsung Galaxy en excelente estado.', 'https://cdn.pixabay.com/photo/2023/01/07/05/25/smartphone-7702594_1280.jpg', 'Valencia, España', 'Accesorios para Smartphone', 'oferta', 3, 30, 'Luis Fernández'),
 (4, 'Patín Eléctrico', 'Patín eléctrico usado, perfecto para desplazamientos cortos.', 'https://cdn.pixabay.com/photo/2022/08/04/16/09/electric-scooter-7365011_1280.jpg', 'Sevilla, España', 'Bicicleta o Scooter', 'trueke', 4, 15, 'María López');
