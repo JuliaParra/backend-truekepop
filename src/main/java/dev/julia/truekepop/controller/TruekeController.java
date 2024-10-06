@@ -29,6 +29,8 @@ public class TruekeController {
     @Autowired
     private TruekeService truekeService;
 
+
+
     @GetMapping("/urgente")
     public List<Trueke> getUrgentTruekes() {
         return truekeService.findByCategoriaId(1L);

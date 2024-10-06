@@ -50,7 +50,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, endpoint + "/login").permitAll() // Permitir acceso al login
                 .requestMatchers(HttpMethod.GET, endpoint + "/trueke").permitAll()
                 .requestMatchers(HttpMethod.POST, endpoint + "/trueke").permitAll() // Permitir acceso a truekes
-                .requestMatchers(HttpMethod.GET, endpoint + "/admin/**").hasRole("ADMIN") // Solo ADMIN para /admin/**
+                .requestMatchers(HttpMethod.GET, endpoint + "/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, endpoint + "/admin/**").hasRole("ADMIN") // Solo ADMIN para /admin/**
                 .anyRequest().permitAll() 
             )
             .userDetailsService(jpaUserDetailsService)
