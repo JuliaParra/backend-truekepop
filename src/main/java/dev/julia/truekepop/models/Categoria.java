@@ -17,15 +17,15 @@ public class Categoria {
 
     private String nombre;
 
-    // Constructor vacío
+   
     public Categoria() {}
 
-    // Constructor con parámetros
+    
     public Categoria(String nombre) {
         this.nombre = nombre;
     }
 
-    // Getters y Setters
+   
     public Long getId() {
         return id;
     }

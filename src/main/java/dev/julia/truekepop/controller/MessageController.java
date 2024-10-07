@@ -28,14 +28,14 @@ public class MessageController {
 
     @GetMapping
     public ResponseEntity<List<Message>> getAllMessages() {
-        // Puedes implementar este método si deseas permitir que se obtengan todos los mensajes
+        
         List<Message> messages = messageService.getAllMessages();
         return ResponseEntity.ok(messages);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMessage(@PathVariable Long id) {
-        messageService.deleteMessage(id); // Implementa este método en el servicio
+        messageService.deleteMessage(id); 
         return ResponseEntity.noContent().build();
     }
 }

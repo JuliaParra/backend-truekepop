@@ -10,9 +10,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,8 +31,6 @@ public class TruekeController {
 
     @Autowired
     private TruekeService truekeService;
-
-
 
     @GetMapping("/urgente")
     public List<Trueke> getUrgentTruekes() {
@@ -51,6 +52,12 @@ public class TruekeController {
         return truekeService.findByCategoriaId(2L);
     }
 
+    // Método para obtener todos los truekes
+    @GetMapping
+    public List<Trueke> getAllTruekes() {
+        return truekeService.getAllTruekes();
+    }
+
     // Método para crear un trueke
     @PostMapping
     public ResponseEntity<String> createTrueke(
@@ -63,13 +70,11 @@ public class TruekeController {
             @RequestParam("image") MultipartFile image) {
 
         try {
-            // Buscar la categoría en la base de datos
             Categoria categoria = truekeService.findCategoriaById(categoryId);
             if (categoria == null) {
                 return ResponseEntity.status(400).body("Categoría no encontrada");
             }
 
-            // Crear un nuevo objeto Trueke
             Trueke trueke = new Trueke();
             trueke.setName(name);
             trueke.setDescription(description);
@@ -77,25 +82,18 @@ public class TruekeController {
             trueke.setDesiredItem(desiredItem);
             trueke.setType(type);
             trueke.setLikes(0);
-
-            // Asignar la categoría encontrada al trueke
             trueke.setCategoria(categoria);
 
-            // Guardar la imagen en el sistema de archivos
             if (image != null && !image.isEmpty()) {
                 String directory = "images/";
                 String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
                 Path path = Paths.get(directory + fileName);
-                Files.createDirectories(path.getParent()); // Crear el directorio si no existe
+                Files.createDirectories(path.getParent());
                 Files.write(path, image.getBytes());
-
-                // Guardar la ruta de la imagen en la base de datos
                 trueke.setImage(directory + fileName);
             }
 
-            // Guardar el trueke usando el servicio
             truekeService.saveTrueke(trueke);
-
             return ResponseEntity.ok("Trueke creado con éxito!");
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,7 +110,7 @@ public class TruekeController {
 
             if (resource.exists()) {
                 return ResponseEntity.ok()
-                        .contentType(MediaType.IMAGE_JPEG) // Cambia el tipo de contenido si es necesario
+                        .contentType(MediaType.IMAGE_JPEG)
                         .body(resource);
             } else {
                 return ResponseEntity.notFound().build();
@@ -122,4 +120,52 @@ public class TruekeController {
             return ResponseEntity.status(500).body(null);
         }
     }
-}
+
+    @DeleteMapping("/{id}") 
+    public ResponseEntity<Void> deleteTrueke(@PathVariable Long id) {
+        truekeService.deleteTrueke(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Método para editar un trueke
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateTrueke(
+            @PathVariable Long id,
+            @RequestBody Trueke updatedTrueke) {
+        try {
+            Trueke existingTrueke = truekeService.findTruekeById(id);
+            if (existingTrueke == null) {
+                return ResponseEntity.status(404).body("Trueke no encontrado");
+            }
+    
+            
+            existingTrueke.setName(updatedTrueke.getName());
+            existingTrueke.setDescription(updatedTrueke.getDescription());
+            existingTrueke.setLocation(updatedTrueke.getLocation());
+            existingTrueke.setDesiredItem(updatedTrueke.getDesiredItem());
+            existingTrueke.setType(updatedTrueke.getType());
+    
+            
+            if (updatedTrueke.getCategoria() != null) {
+                Categoria categoria = truekeService.findCategoriaById(updatedTrueke.getCategoria().getId());
+                if (categoria == null) {
+                    return ResponseEntity.status(400).body("Categoría no encontrada");
+                }
+                existingTrueke.setCategoria(categoria);
+            }
+    
+            
+            if (updatedTrueke.getImage() != null && !updatedTrueke.getImage().isEmpty()) {
+                existingTrueke.setImage(updatedTrueke.getImage());
+            }
+    
+            truekeService.saveTrueke(existingTrueke);
+            return ResponseEntity.ok("Trueke actualizado con éxito!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error al actualizar el trueke: " + e.getMessage());
+        }
+            }
+        }
+        
+    

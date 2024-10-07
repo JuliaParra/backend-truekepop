@@ -17,29 +17,54 @@ public class TruekeService {
     private TruekeRepository truekeRepository;
 
     @Autowired
-    private CategoriaRepository categoriaRepository; // Inyección del repositorio de Categoria
+    private CategoriaRepository categoriaRepository; 
 
     public List<Trueke> getAllTruekes() {
         return truekeRepository.findAll();
     }
 
-    // Método para encontrar truekes por tipo
+ 
     public List<Trueke> findByType(String type) {
         return truekeRepository.findByType(type);
     }
 
-    // Método para encontrar truekes por categoriaId
+    
     public List<Trueke> findByCategoriaId(Long categoriaId) {
         return truekeRepository.findByCategoriaId(categoriaId);
     }
 
-    // Método para guardar el trueke
+   
     public void saveTrueke(Trueke trueke) {
         truekeRepository.save(trueke);
     }
 
-    // Nuevo método para buscar una categoría por su ID
+    public void deleteTrueke(Long id) {
+        truekeRepository.deleteById(id);
+    }
+
+   
     public Categoria findCategoriaById(Long id) {
         return categoriaRepository.findById(id).orElse(null);
+    }
+
+   
+    public Trueke findTruekeById(Long id) {
+        return truekeRepository.findById(id).orElse(null);
+    }
+    
+   
+    public Trueke updateTrueke(Long id, Trueke updatedTrueke) {
+        Trueke existingTrueke = findTruekeById(id);
+        if (existingTrueke != null) {
+            existingTrueke.setName(updatedTrueke.getName());
+            existingTrueke.setDescription(updatedTrueke.getDescription());
+            existingTrueke.setLocation(updatedTrueke.getLocation());
+            existingTrueke.setDesiredItem(updatedTrueke.getDesiredItem());
+            existingTrueke.setType(updatedTrueke.getType());
+            existingTrueke.setCategoria(updatedTrueke.getCategoria());
+            existingTrueke.setImage(updatedTrueke.getImage());
+            return truekeRepository.save(existingTrueke);
+        }
+        return null;
     }
 }

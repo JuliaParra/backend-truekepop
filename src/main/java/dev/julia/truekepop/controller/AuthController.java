@@ -14,11 +14,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody; // Cambiar aquí
+import org.springframework.web.bind.annotation.RequestBody; 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.julia.truekepop.models.LoginRequest; // Clase que contiene email y password
+import dev.julia.truekepop.models.LoginRequest; 
 import dev.julia.truekepop.models.User;
 import dev.julia.truekepop.services.UserService;
 
@@ -30,37 +30,59 @@ public class AuthController {
     private UserService userService;
 
     @Autowired
-    private AuthenticationManager authenticationManager; // Necesario para la autenticación
+    private AuthenticationManager authenticationManager; 
 
     @PostMapping(path = "/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest loginRequest) { // Cambiar aquí
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest loginRequest) { 
         try {
-            // Autenticación del usuario con las credenciales proporcionadas
+            
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
             );
 
-            // Si la autenticación fue exitosa, se establece en el contexto de seguridad
+            
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // Obtener el usuario autenticado
             User user = userService.findByEmail(loginRequest.getEmail());
 
-            // Crear un mapa para la respuesta
+            
             Map<String, Object> json = new HashMap<>();
             json.put("message", "Logged");
             json.put("email", user.getEmail());
 
-            // Obtener todos los roles del usuario y agregarlos al JSON
+            
             List<String> roles = authentication.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
             json.put("roles", roles);
 
-            return ResponseEntity.status(HttpStatus.OK).body(json); // Cambia el estado a 200 OK
+            return ResponseEntity.status(HttpStatus.OK).body(json); 
         } catch (Exception e) {
-            // Manejo de errores: usuario no autenticado
+            
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid credentials"));
         }
+
+        
     }
+
+    @PostMapping(path = "/register")
+public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
+    Map<String, String> response = new HashMap<>();
+    
+    try {
+       
+        userService.saveUser(user);
+        
+        
+        response.put("message", "User registered successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response); 
+    } catch (Exception e) {
+        
+        response.put("message", "Error registering user: " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response); 
+    }
+}
+
+
+    
 }

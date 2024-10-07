@@ -12,7 +12,7 @@ INSERT INTO roles (id_role, name) VALUES (2, 'ROLE_ADMIN');
 
 -- Insertar usuarios
 INSERT INTO users (id_user, email, password, username) 
-VALUES (1,  'user@example.com', '$2a$10$EIXZHy2uM.LlBGQKQy2mLuvB9aT6qUJn6xDuv3X0rQ8IHTG9LqF4a', 'user123');
+VALUES (1,  'user@example.com', '$2a$12$DJG/qydxpmc58GM7N1G3vOnzOpiny6qV.VzCsNqtdUm6uZf2kiAVy', 'user123');
 INSERT INTO users (id_user, email, password, username) 
 VALUES (2, 'manoli@example.com', '$2a$12$tjBqHbRqNTq2deiHD9ydSuJ3NXWYHQIb4q2JvqjESKZeAI5NQ00oS', 'manoli');
 

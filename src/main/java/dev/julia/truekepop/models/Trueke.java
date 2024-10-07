@@ -23,8 +23,7 @@ public class Trueke {
     private String desiredItem;
     private String type;
     private int likes;
-    
-    private String ownerName; // Agregar campo ownerName
+    private String ownerName;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
@@ -40,7 +39,7 @@ public class Trueke {
         this.desiredItem = desiredItem;
         this.type = type;
         this.likes = likes;
-        this.ownerName = ownerName; // Asignar el ownerName
+        this.ownerName = ownerName;
         this.categoria = categoria;
     }
 
@@ -108,11 +107,11 @@ public class Trueke {
         this.likes = likes;
     }
 
-    public String getOwnerName() { // Getter para ownerName
+    public String getOwnerName() {
         return ownerName;
     }
 
-    public void setOwnerName(String ownerName) { // Setter para ownerName
+    public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
     }
 

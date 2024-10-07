@@ -36,7 +36,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private List<Role> roles; // Cambiar Set a List para evitar errores de serialización o duplicación.
+    private List<Role> roles; 
 
     public User() {}
 

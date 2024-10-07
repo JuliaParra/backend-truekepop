@@ -15,7 +15,7 @@ public class Message {
     private Long id;
 
     private String ownerName;
-    private String content; // Asegúrate de que este campo esté definido
+    private String content; 
 
     public Message() {}
 

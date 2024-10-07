@@ -9,6 +9,6 @@ import dev.julia.truekepop.models.Trueke;
 
 @Repository
 public interface TruekeRepository extends JpaRepository<Trueke, Long> {
-    List<Trueke> findByCategoriaId(Long categoriaId); // Método existente para buscar por categoría
-    List<Trueke> findByType(String type); // Método para buscar por tipo
+    List<Trueke> findByCategoriaId(Long categoriaId); 
+    List<Trueke> findByType(String type); 
 }

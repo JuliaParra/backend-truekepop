@@ -43,21 +43,24 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfiguration()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, endpoint + "/login").permitAll() // Permitir acceso al login
+            .requestMatchers(HttpMethod.POST, endpoint + "/register").permitAll()
+                .requestMatchers(HttpMethod.POST, endpoint + "/login").permitAll()
+                .requestMatchers(HttpMethod.POST, endpoint + "/login").permitAll()
                 .requestMatchers(HttpMethod.GET, endpoint + "/trueke").permitAll()
-                .requestMatchers(HttpMethod.POST, endpoint + "/trueke").permitAll() // Permitir acceso a truekes
-                .requestMatchers(HttpMethod.POST, endpoint + "/messages").permitAll() // Permitir acceso al endpoint de mensajes
+                .requestMatchers(HttpMethod.POST, endpoint + "/trueke").permitAll()
+                .requestMatchers(HttpMethod.PUT, endpoint + "/trueke/{id}").permitAll() 
+                .requestMatchers(HttpMethod.POST, endpoint + "/messages").permitAll()
+                .requestMatchers(HttpMethod.DELETE, endpoint + "/trueke/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, endpoint + "/admin/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, endpoint + "/admin/**").hasRole("ADMIN") // Solo ADMIN para /admin/**
-                .anyRequest().permitAll() 
+                .anyRequest().permitAll()
             )
             .userDetailsService(jpaUserDetailsService)
             .httpBasic(basic -> basic.authenticationEntryPoint(myBasicAuthenticationEntryPoint))
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
-
+    
         http.headers(header -> header.frameOptions(frame -> frame.sameOrigin()));
-
+    
         return http.build();
     }
 

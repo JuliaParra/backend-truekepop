@@ -21,7 +21,7 @@ public class JpaUserDetailsService implements UserDetailsService {
 
     @Override
 public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    User user = repository.findByEmail(email); // Búsqueda del usuario por correo electrónico
+    User user = repository.findByEmail(email); 
 
     if (user == null) {
         throw new UsernameNotFoundException("Usuario no encontrado con el email: " + email);
